@@ -30,6 +30,7 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.2.16",
     "@types/eslint": "^8.37.0",
     "@types/leaflet": "^1.9.3",
     "@types/node": "^18.16.0",
