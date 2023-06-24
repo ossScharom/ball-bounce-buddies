@@ -8,6 +8,7 @@ import {
 import Email from "next-auth/providers/email";
 import { prisma } from "~/server/db";
 import { sendVerificationRequest } from "../utils/sendVerificationRequest";
+import { createHash } from "crypto";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -67,6 +68,17 @@ export const authOptions: NextAuthOptions = {
      * @see https://next-auth.js.org/providers/github
      */
   ],
+  events:{
+    async signIn({account, user, isNewUser}){
+      if(isNewUser && user.email){
+        console.log('newuser')
+        await prisma.user.update({where: {
+          id: user.id
+        }, data: {gravatarLink: `https://www.gravatar.com/avatar/${createHash('md5').update(user.email).digest('hex')}`}})
+      }
+    }
+  }
+
 };
 
 /**
