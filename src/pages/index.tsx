@@ -3,6 +3,7 @@ import { api } from "~/utils/api";
 import MainLayout from "./layout/MainLayout";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 export const LazyMap = dynamic(import("../components/Map"), {
   ssr: false,
@@ -14,11 +15,11 @@ export const LazyMap = dynamic(import("../components/Map"), {
 export default function Home() {
   const { data: session } = useSession()
   const router = useRouter()
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const [selectedSport, setSelectedSport] =  useState('TABLE_TENNIS')
 
   return (
-    <MainLayout>
-      <LazyMap />
+    <MainLayout setSelectedSport={setSelectedSport} selectedSport={selectedSport}>
+      <LazyMap selectedSport={selectedSport}/>
     </MainLayout>
   );
 }

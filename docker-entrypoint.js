@@ -8,6 +8,7 @@ const env = { ...process.env }
   // If running the web server then migrate existing database
   if (process.argv.slice(2).join(' ') === 'yarn run start') {
     await exec('npx prisma migrate deploy')
+    await exec('npx prisma db seed')
   }
 
   // launch application

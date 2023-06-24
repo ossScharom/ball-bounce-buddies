@@ -33,7 +33,6 @@ RUN npx prisma generate
 # Copy application code
 COPY --link . .
 
-
 # Build application
 RUN SKIP_ENV_VALIDATION=1 yarn run build
 

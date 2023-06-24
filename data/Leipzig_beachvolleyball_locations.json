@@ -1,0 +1,19 @@
+{
+    "4267009189": {
+        "tags": {
+            "leisure": "pitch",
+            "sport": "beachvolleyball",
+            "surface": "sand",
+            "wheelchair": "yes"
+        },
+        "lat": "51.2812034",
+        "lon": "12.3493796"
+    },
+    "8696292019": {
+        "tags": {
+            "sport": "beachvolleyball"
+        },
+        "lat": "51.3331762",
+        "lon": "12.4037832"
+    }
+}

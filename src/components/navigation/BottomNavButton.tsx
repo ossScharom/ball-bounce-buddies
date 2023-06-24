@@ -1,13 +1,27 @@
-import classNames from 'classnames'
-import React from 'react'
+import classNames from "classnames";
+import React, { Dispatch, SetStateAction } from "react";
 
 type Props = {
-    children: React.ReactNode,
-    active?: boolean
-}
+  children: React.ReactNode;
+  value: string;
+  setSelectedSport: Dispatch<SetStateAction<string>>;
+  selectedSport: string;
+};
 
-export default function BottomNavButton({children, active=false}: Props) {
+export default function BottomNavButton({
+  children,
+  value,
+  setSelectedSport,
+  selectedSport,
+}: Props) {
   return (
-    <button className={classNames("text-primary text-3xl p-2", {'active': active})}>{children}</button>
-  )
+    <button
+      onClick={() => setSelectedSport(value)}
+      className={classNames("p-2 text-3xl text-primary", {
+        active: selectedSport === value,
+      })}
+    >
+      {children}
+    </button>
+  );
 }

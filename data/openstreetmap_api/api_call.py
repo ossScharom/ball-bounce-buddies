@@ -32,7 +32,7 @@ def fetch_sport_locations(sport, city="Leipzig"):
 
         node_dict[node.id] = {"tags": node_tags, "lat": node_lat, "lon": node_lon}
 
-    filename = f"./data/{city}_{sport}_locations.json"
+    filename = f"../data/{city}_{sport}_locations.json"
     with open(filename, "w") as fp:
         json.dump(node_dict, fp, indent=4)
 
@@ -40,8 +40,7 @@ def fetch_sport_locations(sport, city="Leipzig"):
 def main():
     fetch_sport_locations("table_tennis")
     fetch_sport_locations("basketball")
-    fetch_sport_locations("chess")
-    fetch_sport_locations("skateboard")
+    fetch_sport_locations("beachvolleyball")
 
 
 if __name__ == "__main__":
