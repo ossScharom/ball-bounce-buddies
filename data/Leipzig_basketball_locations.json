@@ -1,0 +1,89 @@
+{
+    "339899151": {
+        "tags": {
+            "created_by": "Potlatch 0.10f",
+            "leisure": "pitch",
+            "sport": "basketball"
+        },
+        "lat": "51.3228761",
+        "lon": "12.2640336"
+    },
+    "1340491835": {
+        "tags": {
+            "leisure": "pitch",
+            "sport": "basketball"
+        },
+        "lat": "51.3213484",
+        "lon": "12.2546583"
+    },
+    "1540713206": {
+        "tags": {
+            "leisure": "playground",
+            "name": "Streetball",
+            "sport": "basketball"
+        },
+        "lat": "51.3062857",
+        "lon": "12.3691883"
+    },
+    "3504851959": {
+        "tags": {
+            "leisure": "pitch",
+            "sport": "basketball"
+        },
+        "lat": "51.3325876",
+        "lon": "12.3277328"
+    },
+    "4339922078": {
+        "tags": {
+            "leisure": "pitch",
+            "sport": "basketball"
+        },
+        "lat": "51.3884564",
+        "lon": "12.3747926"
+    },
+    "5108554885": {
+        "tags": {
+            "hoops": "1",
+            "leisure": "pitch",
+            "lit": "no",
+            "sport": "basketball"
+        },
+        "lat": "51.3590416",
+        "lon": "12.4574926"
+    },
+    "7409250315": {
+        "tags": {
+            "access": "yes",
+            "hoops": "1",
+            "leisure": "pitch",
+            "sport": "basketball",
+            "surface": "asphalt"
+        },
+        "lat": "51.3340547",
+        "lon": "12.3275691"
+    },
+    "9077631853": {
+        "tags": {
+            "leisure": "pitch",
+            "sport": "basketball"
+        },
+        "lat": "51.3712888",
+        "lon": "12.3428078"
+    },
+    "9162224115": {
+        "tags": {
+            "leisure": "pitch",
+            "sport": "basketball"
+        },
+        "lat": "51.3028655",
+        "lon": "12.4332672"
+    },
+    "9162224116": {
+        "tags": {
+            "leisure": "pitch",
+            "sport": "basketball"
+        },
+        "lat": "51.3026864",
+        "lon": "12.4332888"
+    }
+}
