@@ -1,20 +1,29 @@
-import React from 'react'
-import { useSession } from 'next-auth/react'
-import Signin from '../auth/Signin'
-import Signout from '../auth/Signout'
+import React, { Dispatch, SetStateAction } from "react";
+import { useSession } from "next-auth/react";
+import Signin from "../auth/Signin";
+import UserProfileIcon from "../UserProfileIcon";
+import SportButtons from "./SportButtons";
 
-type Props = {}
+export type Props = {
+  setSelectedSport: Dispatch<SetStateAction<string>>;
+  selectedSport: string;
+};
 
-export default function Navbar({}: Props) {
-  const {data: session, status} = useSession()
+export default function Navbar({ setSelectedSport, selectedSport }: Props) {
+  const { data, status } = useSession();
   return (
-        <div className="navbar w-full min-h-fit flex-col gap-1 md:flex-row bg-base-300">
-          <div className="mx-2 md:grow grow-0 px-2 text-2xl">
-            Ball
-            Bounce
-            Buddies
-          </div>
-          {status === "unauthenticated" ? <Signin/> : <Signout/>}
-        </div>
-  )
+    <div className="p-3 grid grid-flow-row grid-cols-3 min-h-fit w-full bg-base-300">
+      <div className="text-2xl self-center">Ball Bounce Buddies</div>
+      <SportButtons
+        selectedSport={selectedSport}
+        setSelectedSport={setSelectedSport}
+      />
+
+      {status !== "unauthenticated" && data ? (
+        <UserProfileIcon userSessionData={data} />
+      ) : (
+        <Signin />
+      )}
+    </div>
+  );
 }

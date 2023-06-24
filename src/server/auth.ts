@@ -20,15 +20,17 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
+      image: string;
       // ...other properties
       // role: UserRole;
     } & DefaultSession["user"];
   }
 
-  // interface User {
+  interface User {
   //   // ...other properties
   //   // role: UserRole;
-  // }
+    image: string
+  }
 }
 
 /**
@@ -43,6 +45,7 @@ export const authOptions: NextAuthOptions = {
       user: {
         ...session.user,
         id: user.id,
+        image: user.image
       },
     }),
   },
@@ -74,7 +77,7 @@ export const authOptions: NextAuthOptions = {
         console.log('newuser')
         await prisma.user.update({where: {
           id: user.id
-        }, data: {gravatarLink: `https://www.gravatar.com/avatar/${createHash('md5').update(user.email).digest('hex')}`}})
+        }, data: {image: `https://www.gravatar.com/avatar/${createHash('md5').update(user.email).digest('hex')}`}})
       }
     }
   }

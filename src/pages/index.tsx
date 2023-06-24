@@ -12,14 +12,26 @@ export const LazyMap = dynamic(import("../components/Map"), {
   ),
 });
 
+export enum Page{
+  MAP,
+  OBSERVE,
+  CHECK_IN_HISTORY
+}
+
 export default function Home() {
-  const { data: session } = useSession()
-  const router = useRouter()
-  const [selectedSport, setSelectedSport] =  useState('TABLE_TENNIS')
+  const { data: session } = useSession();
+  const router = useRouter();
+  const [selectedSport, setSelectedSport] = useState("TABLE_TENNIS");
+  const [selectedPage, setSelectedPage] = useState(Page.MAP);
 
   return (
-    <MainLayout setSelectedSport={setSelectedSport} selectedSport={selectedSport}>
-      <LazyMap selectedSport={selectedSport}/>
+    <MainLayout
+      setSelectedSport={setSelectedSport}
+      selectedSport={selectedSport}
+      selectedPage={selectedPage}
+      setSelectedPage={setSelectedPage}
+    >
+      <LazyMap selectedSport={selectedSport} />
     </MainLayout>
   );
 }

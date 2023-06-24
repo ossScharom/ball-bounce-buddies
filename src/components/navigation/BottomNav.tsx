@@ -1,36 +1,35 @@
 import React, { Dispatch, SetStateAction } from "react";
-import { BottomNavigation } from "react-daisyui";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faMapLocationDot,
+  faClockRotateLeft,
+  faBinoculars,
+} from "@fortawesome/free-solid-svg-icons";
 import BottomNavButton from "./BottomNavButton";
-
+import { Page } from "~/pages";
 type Props = {
-  setSelectedSport: Dispatch<SetStateAction<string>>;
-  selectedSport: string;
+  setSelectedPage: Dispatch<SetStateAction<Page>>;
+  selectedPage: Page;
 };
 
-export default function BottomNav({ setSelectedSport, selectedSport }: Props) {
+export default function BottomNav({ setSelectedPage, selectedPage }: Props) {
   return (
     <div className="btm-nav relative">
       <BottomNavButton
-        value="BASKETBALL"
-        setSelectedSport={setSelectedSport}
-        selectedSport={selectedSport}
-      >
-        🏀
-      </BottomNavButton>
+        iconDef={faMapLocationDot}
+        active={selectedPage === Page.MAP}
+        onClick={()=>setSelectedPage(Page.MAP)}
+      />
       <BottomNavButton
-        value="VOLLEYBALL"
-        setSelectedSport={setSelectedSport}
-        selectedSport={selectedSport}
-      >
-        🏐
-      </BottomNavButton>
+        iconDef={faBinoculars}
+        active={selectedPage === Page.OBSERVE}
+        onClick={()=>setSelectedPage(Page.OBSERVE)}
+      />
       <BottomNavButton
-        value="TABLE_TENNIS"
-        setSelectedSport={setSelectedSport}
-        selectedSport={selectedSport}
-      >
-        🏓
-      </BottomNavButton>
+        iconDef={faClockRotateLeft}
+        active={selectedPage === Page.CHECK_IN_HISTORY}
+        onClick={()=>setSelectedPage(Page.CHECK_IN_HISTORY)}
+      />
     </div>
   );
 }

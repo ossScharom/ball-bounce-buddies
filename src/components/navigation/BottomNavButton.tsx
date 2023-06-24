@@ -1,27 +1,18 @@
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import classNames from "classnames";
-import React, { Dispatch, SetStateAction } from "react";
+import React from "react";
 
 type Props = {
-  children: React.ReactNode;
-  value: string;
-  setSelectedSport: Dispatch<SetStateAction<string>>;
-  selectedSport: string;
+  iconDef: IconDefinition;
+  active: boolean;
+  onClick: () => void;
 };
 
-export default function BottomNavButton({
-  children,
-  value,
-  setSelectedSport,
-  selectedSport,
-}: Props) {
+export default function BottomNavButton({ iconDef, active, onClick }: Props) {
   return (
-    <button
-      onClick={() => setSelectedSport(value)}
-      className={classNames("p-2 text-3xl text-primary", {
-        active: selectedSport === value,
-      })}
-    >
-      {children}
+    <button onClick={onClick} className={classNames({ active: active })}>
+      <FontAwesomeIcon className="text-3xl" icon={iconDef} />
     </button>
   );
 }
