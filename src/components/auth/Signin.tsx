@@ -5,21 +5,29 @@ import { Button, Form, Input, InputGroup } from "react-daisyui";
 type Props = {};
 
 export default function Signin({}: Props) {
-
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const handleSubmit = (e: FormEvent) => {
-    e.preventDefault()
-    signIn("email", { email })
-  }
+    e.preventDefault();
+    signIn("email", { email });
+  };
   const handleEmailInput = (e: ChangeEvent<HTMLInputElement>) => {
-      setEmail(e.target.value)
-  }
+    setEmail(e.target.value);
+  };
 
   return (
     <Form onSubmit={handleSubmit}>
       <InputGroup>
-        <Input type="text" onChange={handleEmailInput} value={email} placeholder="sample@email.com" bordered />
-        <Button type="submit" className="btn-primary">Sign-in</Button>
+        <Input
+          type="text"
+          className="!rounded-l-md"
+          onChange={handleEmailInput}
+          value={email}
+          placeholder="sample@email.com"
+          bordered
+        />
+        <Button type="submit" className="btn-primary btn-md no-animation rounded-r-md">
+          Sign-in
+        </Button>
       </InputGroup>
     </Form>
   );
