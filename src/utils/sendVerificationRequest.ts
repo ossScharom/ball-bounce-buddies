@@ -10,7 +10,6 @@ export async function sendVerificationRequest(params: SendVerificationRequestPar
   } 
   const { identifier, url, provider, theme } = params
   const { host } = new URL(url)
-  console.log({provider})
   const transport = createTransport(provider.server)
   const result = await transport.sendMail({
     to: identifier,
