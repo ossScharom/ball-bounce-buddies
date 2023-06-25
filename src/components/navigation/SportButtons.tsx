@@ -7,7 +7,7 @@ export default function SportButtons({
   selectedSport,
 }: Props) {
   return (
-    <div className="join self-center">
+    <div className="join">
       <SportButton
         value="BASKETBALL"
         setSelectedSport={setSelectedSport}

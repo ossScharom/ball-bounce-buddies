@@ -5,8 +5,10 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import "leaflet-defaulticon-compatibility";
 import { Button, Card, Divider } from "react-daisyui";
-import TrafficLight from "./TrafficLight";
-import { api } from "../utils/api";
+import TrafficLight from "../TrafficLight";
+import { api } from "../../utils/api";
+import CheckInButton from "./CheckInButton";
+import ObserveButton from "./ObserveButton";
 
 type Props = {selectedSport: string};
 
@@ -27,7 +29,7 @@ export default function Map({selectedSport}: Props) {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {positions.data?.map(({ lat, lon }) => (
+      {positions.data?.map(({ id, lat, lon }) => (
         <Marker key={lat+lon} position={[lat, lon]}>
           <Popup>
             <div className="flex flex-col">
@@ -37,8 +39,8 @@ export default function Map({selectedSport}: Props) {
                 <span>Fun boulevard 6</span>
               </div>
               <div className="join flex-col gap-3">
-                <Button className="btn-primary btn-sm w-full">Check-in</Button>
-                <Button className="btn-primary btn-sm w-full">Observe</Button>
+                <CheckInButton sportPlaceId={id}/>
+                <ObserveButton sportPlaceId={id}/>
               </div>
             </div>
           </Popup>

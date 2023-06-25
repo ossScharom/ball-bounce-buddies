@@ -4,6 +4,8 @@ import MainLayout from "./layout/MainLayout";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import CheckInHistory from "~/components/CheckInHistory";
+import Observe from "~/components/Observe";
 
 export const LazyMap = dynamic(import("../components/Map"), {
   ssr: false,
@@ -24,6 +26,18 @@ export default function Home() {
   const [selectedSport, setSelectedSport] = useState("TABLE_TENNIS");
   const [selectedPage, setSelectedPage] = useState(Page.MAP);
 
+  let pageToRender
+  switch(selectedPage){
+    case Page.MAP:
+      pageToRender = <LazyMap selectedSport={selectedSport} />
+      break;
+    case Page.OBSERVE:
+      pageToRender = <Observe/>
+      break
+    case Page.CHECK_IN_HISTORY:
+      pageToRender = <CheckInHistory/>
+      break;
+  }
   return (
     <MainLayout
       setSelectedSport={setSelectedSport}
@@ -31,7 +45,7 @@ export default function Home() {
       selectedPage={selectedPage}
       setSelectedPage={setSelectedPage}
     >
-      <LazyMap selectedSport={selectedSport} />
+      {pageToRender}
     </MainLayout>
   );
 }

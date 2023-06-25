@@ -16,7 +16,7 @@ export default function Signin({}: Props) {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <InputGroup>
+      <InputGroup className="flex">
         <Input
           type="text"
           className="!rounded-l-md"
