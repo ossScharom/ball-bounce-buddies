@@ -1,15 +1,19 @@
 import React from "react";
 import SingleLight from "./SingleLight";
 
-type Props = {};
+type Props = { checkInCount: number };
 
-export default function TrafficLight({}: Props) {
+export default function TrafficLight({ checkInCount }: Props) {
+  const red = 2 <= checkInCount
+  const yellow = 1 <=checkInCount && checkInCount<2
+  const green = checkInCount==0
+  console.log({checkInCount,red, yellow, green})
   return (
     <div className="flex justify-center p-2">
-      <span className="flex flex-col p-1 gap-0.5 rounded-sm bg-black">
-        <SingleLight color="red" toggled />
-        <SingleLight color="yellow" toggled />
-        <SingleLight color="green" toggled />
+      <span className="flex flex-col gap-0.5 rounded-sm bg-black p-1">
+        <SingleLight color="red" toggled={!green && !yellow && red} />
+        <SingleLight color="yellow" toggled={!green && yellow && !red} />
+        <SingleLight color="green" toggled={green && !yellow && !red} />
       </span>
     </div>
   );

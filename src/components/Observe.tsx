@@ -1,8 +1,8 @@
 import React from 'react'
 
-type Props = {}
+type Props = {selectedSport: string}
 
-export default function Observe({}: Props) {
+export default function Observe({selectedSport}: Props) {
   return (
     <div>Observe</div>
   )

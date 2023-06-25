@@ -32,10 +32,10 @@ export default function Home() {
       pageToRender = <LazyMap selectedSport={selectedSport} />
       break;
     case Page.OBSERVE:
-      pageToRender = <Observe/>
+      pageToRender = <Observe selectedSport={selectedSport}/>
       break
     case Page.CHECK_IN_HISTORY:
-      pageToRender = <CheckInHistory/>
+      pageToRender = <CheckInHistory selectedSport={selectedSport}/>
       break;
   }
   return (

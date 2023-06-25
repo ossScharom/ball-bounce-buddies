@@ -1,24 +1,52 @@
 import { LatLngExpression } from "leaflet";
-import React from "react";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
-import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import "leaflet-defaulticon-compatibility";
-import { Button, Card, Divider } from "react-daisyui";
-import TrafficLight from "../TrafficLight";
+import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
+import "leaflet/dist/leaflet.css";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { api } from "../../utils/api";
-import CheckInButton from "./CheckInButton";
-import ObserveButton from "./ObserveButton";
+import TrafficLight from "../TrafficLight";
+import SportPlaceButton from "./SportPlaceButton";
+import { useSession } from "next-auth/react";
+import { ToastContainer, toast } from "react-toastify";
+import LoadingSpinner from "../LoadingSpinner";
 
-type Props = {selectedSport: string};
+type Props = { selectedSport: string };
 
-export default function Map({selectedSport}: Props) {
+export default function Map({ selectedSport }: Props) {
   const positionLeipzig = [51.3397, 12.3731] as LatLngExpression;
+  const { data, status } = useSession();
+
+  // Query Sport Places
   const positions = api.sportPlaces.getAllSportPlacesOf.useQuery({
     type: selectedSport,
   });
-  return (
-    // {positions.data?}
+  // Mutations for SportPlaces
+  const createCheckInMutation = api.checkIn.createCheckIn.useMutation({
+    onSuccess: () => {
+      toast.success("🦄 Checked-in!", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      positions.refetch();
+    },
+  });
+
+  // Button handlers
+  const handleCheckIn = (sportPlaceId: string) => () => {
+    createCheckInMutation.mutate({ sportPlaceId });
+  };
+
+  const handleObserve = () => {
+    console.log("Not implemented yet");
+  };
+
+  return positions.data ? (
     <MapContainer
       className="h-full"
       center={positionLeipzig}
@@ -29,23 +57,34 @@ export default function Map({selectedSport}: Props) {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {positions.data?.map(({ id, lat, lon }) => (
-        <Marker key={lat+lon} position={[lat, lon]}>
+      {positions.data.map(({ id, lat, lon, checkIns }) => (
+        <Marker key={lat + lon} position={[lat, lon]}>
           <Popup>
             <div className="flex flex-col">
-              <TrafficLight />
-              <div className="flex flex-col p-3">
-                <span className="font-bold">Address:</span>
-                <span>Fun boulevard 6</span>
-              </div>
-              <div className="join flex-col gap-3">
-                <CheckInButton sportPlaceId={id}/>
-                <ObserveButton sportPlaceId={id}/>
-              </div>
+              <TrafficLight checkInCount={checkIns.length} />
+              {status !== "unauthenticated" && (
+                <div className="join flex-col gap-3">
+                  <SportPlaceButton
+                    onClick={handleCheckIn(id)}
+                    loading={createCheckInMutation.isLoading}
+                    disabled={
+                      positions.isRefetching ||
+                      createCheckInMutation.isLoading ||
+                      !!checkIns.find(
+                        (checkIn) => checkIn.userId === data?.user.id
+                      )
+                    }
+                    text="Check-in"
+                  />
+                  <SportPlaceButton onClick={handleObserve} text="Observe" />
+                </div>
+              )}
             </div>
           </Popup>
         </Marker>
       ))}
     </MapContainer>
+  ) : (
+    <LoadingSpinner />
   );
 }

@@ -15,7 +15,9 @@ type Props = {
 
 export default function MainLayout({ children, selectedSport, setSelectedSport, selectedPage, setSelectedPage }: Props) {
   return (
+
     <div className="w-screen h-screen flex flex-col gap-10 justify-between">
+
         <TopNav setSelectedSport={setSelectedSport} selectedSport={selectedSport}/>
         <div className="w-3/4 h-full mx-auto bg-slate-700">
             {children}

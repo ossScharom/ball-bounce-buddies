@@ -6,6 +6,8 @@ import "~/styles/globals.css";
 import "@fortawesome/fontawesome-svg-core/styles.css"; 
 import { config, library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from '@fortawesome/free-solid-svg-icons'
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
 // Tell Font Awesome to skip adding the CSS automatically 
 // since it's already imported above
 config.autoAddCss = false;
@@ -17,6 +19,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
+      <ToastContainer />
       <Component {...pageProps} />
     </SessionProvider>
   );
