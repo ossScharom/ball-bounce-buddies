@@ -9,7 +9,7 @@
     "lint": "next lint",
     "start": "next start",
     "db:seed": "NODE_ENV=development prisma db seed",
-    "db:dev": "docker run -d --name tt-db --rm -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password -v "$(pwd)/devdb:/var/lib/postgresql/data" postgres:14"
+    "db:dev": "docker run -d --name tt-db --rm -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password -v \"$(pwd)/devdb:/var/lib/postgresql/data\" postgres:14"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
