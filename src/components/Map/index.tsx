@@ -108,6 +108,13 @@ export default function Map({ selectedSport }: Props) {
                         onClick={handleCheckOut(checkIn.id)}
                         text="Check-out"
                         className="btn-error"
+                        loading={
+                          deactivateCheckInMutation.isLoading
+                        }
+                        disabled={
+                          positions.isRefetching ||
+                          deactivateCheckInMutation.isLoading
+                        }
                       />
                     ) : (
                       <SportPlaceButton
@@ -125,11 +132,25 @@ export default function Map({ selectedSport }: Props) {
                         onClick={handleUnObserve(id)}
                         text="Unobserve"
                         className="btn-error"
+                        loading={
+                          deleteObservationMutation.isLoading
+                        }
+                        disabled={
+                          positions.isRefetching ||
+                          deleteObservationMutation.isLoading
+                        }
                       />
                     ) : (
                       <SportPlaceButton
                         onClick={handleObserve(id)}
                         text="Observe"
+                        loading={
+                          createObservationMutation.isLoading
+                        }
+                        disabled={
+                          positions.isRefetching ||
+                          createObservationMutation.isLoading
+                        }
                       />
                     )}
                   </div>
