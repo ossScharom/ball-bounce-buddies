@@ -7,7 +7,6 @@ export default function TrafficLight({ checkInCount }: Props) {
   const red = 2 <= checkInCount
   const yellow = 1 <=checkInCount && checkInCount<2
   const green = checkInCount==0
-  console.log({checkInCount,red, yellow, green})
   return (
     <div className="flex justify-center p-2">
       <span className="flex flex-col gap-0.5 rounded-sm bg-black p-1">

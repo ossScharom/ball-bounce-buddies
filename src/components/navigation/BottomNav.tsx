@@ -22,8 +22,8 @@ export default function BottomNav({ setSelectedPage, selectedPage }: Props) {
       />
       <BottomNavButton
         iconDef={faBinoculars}
-        active={selectedPage === Page.OBSERVE}
-        onClick={()=>setSelectedPage(Page.OBSERVE)}
+        active={selectedPage === Page.OBSERVATIONS}
+        onClick={()=>setSelectedPage(Page.OBSERVATIONS)}
       />
       <BottomNavButton
         iconDef={faClockRotateLeft}

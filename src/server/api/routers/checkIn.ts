@@ -36,4 +36,17 @@ export const checkInRouter = createTRPCRouter({
         },
       });
     }),
+  deactivateCheckIn: protectedProcedure
+    .input(z.object({ checkInId: z.string().cuid() }))
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.checkIn.update({
+        where:{
+          id: input.checkInId
+        },
+        data: {
+          active: false,
+        },
+        
+      });
+    }),
 });

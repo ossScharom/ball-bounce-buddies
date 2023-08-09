@@ -1,4 +1,5 @@
 import { checkInRouter } from "./routers/checkIn";
+import { observationRouter } from "./routers/observation";
 import { sportPlaceRouter } from "./routers/sportPlace";
 import { createTRPCRouter } from "~/server/api/trpc";
 
@@ -9,7 +10,8 @@ import { createTRPCRouter } from "~/server/api/trpc";
  */
 export const appRouter = createTRPCRouter({
   sportPlaces: sportPlaceRouter,
-  checkIn: checkInRouter
+  checkIn: checkInRouter,
+  observation: observationRouter
 });
 
 // export type definition of API

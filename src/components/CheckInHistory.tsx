@@ -28,8 +28,6 @@ export default function CheckInHistory({ selectedSport }: Props) {
             )
         )}
       </Table.Body>
-      <Table />
-      {}
     </Table>
   ) : (
     <LoadingSpinner />

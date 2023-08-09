@@ -16,6 +16,18 @@ export default function Map({ selectedSport }: Props) {
   const positionLeipzig = [51.3397, 12.3731] as LatLngExpression;
   const { data, status } = useSession();
 
+  const toastOnCreation = (message: String) => {
+    toast.success(message, {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  };
   // Query Sport Places
   const positions = api.sportPlaces.getAllSportPlacesOf.useQuery({
     type: selectedSport,
@@ -23,27 +35,49 @@ export default function Map({ selectedSport }: Props) {
   // Mutations for SportPlaces
   const createCheckInMutation = api.checkIn.createCheckIn.useMutation({
     onSuccess: () => {
-      toast.success("🦄 Checked-in!", {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      toastOnCreation("🦄 Checked-in!");
       positions.refetch();
     },
   });
+
+  const deactivateCheckInMutation = api.checkIn.deactivateCheckIn.useMutation({
+    onSuccess: () => {
+      toastOnCreation("🫏 Checked-out!");
+      positions.refetch();
+    },
+  });
+
+  const createObservationMutation =
+    api.observation.createObservation.useMutation({
+      onSuccess: () => {
+        toastOnCreation("👀 Observing this item");
+        positions.refetch();
+      },
+    });
+
+  const deleteObservationMutation =
+    api.observation.deleteObservation.useMutation({
+      onSuccess: () => {
+        toastOnCreation("🙈 Not observing this item");
+        positions.refetch();
+      },
+    });
 
   // Button handlers
   const handleCheckIn = (sportPlaceId: string) => () => {
     createCheckInMutation.mutate({ sportPlaceId });
   };
 
-  const handleObserve = () => {
-    console.log("Not implemented yet");
+  const handleCheckOut = (checkInId: string) => () => {
+    deactivateCheckInMutation.mutate({ checkInId });
+  };
+
+  const handleObserve = (sportPlaceId: string) => () => {
+    createObservationMutation.mutate({ sportPlaceId });
+  };
+
+  const handleUnObserve = (sportPlaceId: string) => () => {
+    deleteObservationMutation.mutate({ sportPlaceId });
   };
 
   return positions.data ? (
@@ -57,32 +91,54 @@ export default function Map({ selectedSport }: Props) {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {positions.data.map(({ id, lat, lon, checkIns }) => (
-        <Marker key={lat + lon} position={[lat, lon]}>
-          <Popup>
-            <div className="flex flex-col">
-              <TrafficLight checkInCount={checkIns.length} />
-              {status !== "unauthenticated" && (
-                <div className="join flex-col gap-3">
-                  <SportPlaceButton
-                    onClick={handleCheckIn(id)}
-                    loading={createCheckInMutation.isLoading}
-                    disabled={
-                      positions.isRefetching ||
-                      createCheckInMutation.isLoading ||
-                      !!checkIns.find(
-                        (checkIn) => checkIn.userId === data?.user.id
-                      )
-                    }
-                    text="Check-in"
-                  />
-                  <SportPlaceButton onClick={handleObserve} text="Observe" />
-                </div>
-              )}
-            </div>
-          </Popup>
-        </Marker>
-      ))}
+      {positions.data.map(({ id, lat, lon, checkIns, isObserved }) => {
+        const checkIn = checkIns.find(
+          (checkIn) => checkIn.userId === data?.user.id
+        );
+
+        return (
+          <Marker key={lat + lon} position={[lat, lon]}>
+            <Popup>
+              <div className="flex flex-col">
+                <TrafficLight checkInCount={checkIns.length} />
+                {status !== "unauthenticated" && (
+                  <div className="join flex-col gap-3">
+                    {!!checkIn ? (
+                      <SportPlaceButton
+                        onClick={handleCheckOut(checkIn.id)}
+                        text="Check-out"
+                        className="btn-error"
+                      />
+                    ) : (
+                      <SportPlaceButton
+                        onClick={handleCheckIn(id)}
+                        loading={createCheckInMutation.isLoading}
+                        disabled={
+                          positions.isRefetching ||
+                          createCheckInMutation.isLoading
+                        }
+                        text="Check-in"
+                      />
+                    )}
+                    {isObserved ? (
+                      <SportPlaceButton
+                        onClick={handleUnObserve(id)}
+                        text="Unobserve"
+                        className="btn-error"
+                      />
+                    ) : (
+                      <SportPlaceButton
+                        onClick={handleObserve(id)}
+                        text="Observe"
+                      />
+                    )}
+                  </div>
+                )}
+              </div>
+            </Popup>
+          </Marker>
+        );
+      })}
     </MapContainer>
   ) : (
     <LoadingSpinner />

@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import React, { HtmlHTMLAttributes, useState } from "react";
 import { Button, ButtonProps } from "react-daisyui";
 
@@ -8,11 +9,12 @@ export default function SportPlaceButton({
   text,
   loading,
   disabled,
+  className,
 }: Props & ButtonProps) {
   return (
     <Button
       disabled={disabled}
-      className="btn-primary btn-sm w-full"
+      className={classNames("btn-primary btn-sm w-full", className)}
       onClick={() => {
         onClick();
       }}

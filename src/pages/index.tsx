@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import CheckInHistory from "~/components/CheckInHistory";
-import Observe from "~/components/Observe";
+import Observations from "~/components/Observations";
 
 export const LazyMap = dynamic(import("../components/Map"), {
   ssr: false,
@@ -16,7 +16,7 @@ export const LazyMap = dynamic(import("../components/Map"), {
 
 export enum Page{
   MAP,
-  OBSERVE,
+  OBSERVATIONS,
   CHECK_IN_HISTORY
 }
 
@@ -31,8 +31,8 @@ export default function Home() {
     case Page.MAP:
       pageToRender = <LazyMap selectedSport={selectedSport} />
       break;
-    case Page.OBSERVE:
-      pageToRender = <Observe selectedSport={selectedSport}/>
+    case Page.OBSERVATIONS:
+      pageToRender = <Observations selectedSport={selectedSport}/>
       break
     case Page.CHECK_IN_HISTORY:
       pageToRender = <CheckInHistory selectedSport={selectedSport}/>
