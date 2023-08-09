@@ -7,12 +7,16 @@ import { api } from "../../utils/api";
 import TrafficLight from "../TrafficLight";
 import SportPlaceButton from "./SportPlaceButton";
 import { useSession } from "next-auth/react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import LoadingSpinner from "../LoadingSpinner";
 
-type Props = { selectedSport: string };
+type Props = {
+  selectedSport: string;
+  setSportPlaceId: (sportPlaceId: string) => void;
+  setModalOpen: (showChat: boolean) => void;
+};
 
-export default function Map({ selectedSport }: Props) {
+export default function Map({ selectedSport, setSportPlaceId, setModalOpen }: Props) {
   const positionLeipzig = [51.3397, 12.3731] as LatLngExpression;
   const { data, status } = useSession();
 
@@ -28,10 +32,12 @@ export default function Map({ selectedSport }: Props) {
       theme: "light",
     });
   };
+
   // Query Sport Places
   const positions = api.sportPlaces.getAllSportPlacesOf.useQuery({
     type: selectedSport,
   });
+
   // Mutations for SportPlaces
   const createCheckInMutation = api.checkIn.createCheckIn.useMutation({
     onSuccess: () => {
@@ -80,87 +86,92 @@ export default function Map({ selectedSport }: Props) {
     deleteObservationMutation.mutate({ sportPlaceId });
   };
 
-  return positions.data ? (
-    <MapContainer
-      className="h-full"
-      center={positionLeipzig}
-      zoom={13}
-      scrollWheelZoom={false}
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      {positions.data.map(({ id, lat, lon, checkIns, isObserved }) => {
-        const checkIn = checkIns.find(
-          (checkIn) => checkIn.userId === data?.user.id
-        );
+  const handleShowChatModal = (sportPlaceId: string) => {
+    setSportPlaceId(sportPlaceId);
+    setModalOpen(true);
+  };
 
-        return (
-          <Marker key={lat + lon} position={[lat, lon]}>
-            <Popup>
-              <div className="flex flex-col">
-                <TrafficLight checkInCount={checkIns.length} />
-                {status !== "unauthenticated" && (
-                  <div className="join flex-col gap-3">
-                    {!!checkIn ? (
+  return positions.data ? (
+    <>
+      <MapContainer
+        className="h-full"
+        center={positionLeipzig}
+        zoom={13}
+        scrollWheelZoom={false}
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        {positions.data.map(({ id, lat, lon, checkIns, isObserved }) => {
+          const checkIn = checkIns.find(
+            (checkIn) => checkIn.userId === data?.user.id
+          );
+
+          return (
+            <Marker key={lat + lon} position={[lat, lon]}>
+              <Popup>
+                <div className="flex flex-col">
+                  <TrafficLight checkInCount={checkIns.length} />
+                  {status !== "unauthenticated" && (
+                    <div className="join flex-col gap-3">
+                      {!!checkIn ? (
+                        <SportPlaceButton
+                          onClick={handleCheckOut(checkIn.id)}
+                          text="Check-out"
+                          className="btn-error"
+                          loading={deactivateCheckInMutation.isLoading}
+                          disabled={
+                            positions.isRefetching ||
+                            deactivateCheckInMutation.isLoading
+                          }
+                        />
+                      ) : (
+                        <SportPlaceButton
+                          onClick={handleCheckIn(id)}
+                          loading={createCheckInMutation.isLoading}
+                          disabled={
+                            positions.isRefetching ||
+                            createCheckInMutation.isLoading
+                          }
+                          text="Check-in"
+                        />
+                      )}
+                      {isObserved ? (
+                        <SportPlaceButton
+                          onClick={handleUnObserve(id)}
+                          text="Unobserve"
+                          className="btn-error"
+                          loading={deleteObservationMutation.isLoading}
+                          disabled={
+                            positions.isRefetching ||
+                            deleteObservationMutation.isLoading
+                          }
+                        />
+                      ) : (
+                        <SportPlaceButton
+                          onClick={handleObserve(id)}
+                          text="Observe"
+                          loading={createObservationMutation.isLoading}
+                          disabled={
+                            positions.isRefetching ||
+                            createObservationMutation.isLoading
+                          }
+                        />
+                      )}
                       <SportPlaceButton
-                        onClick={handleCheckOut(checkIn.id)}
-                        text="Check-out"
-                        className="btn-error"
-                        loading={
-                          deactivateCheckInMutation.isLoading
-                        }
-                        disabled={
-                          positions.isRefetching ||
-                          deactivateCheckInMutation.isLoading
-                        }
+                        onClick={() => handleShowChatModal(id)}
+                        text="Chat"
                       />
-                    ) : (
-                      <SportPlaceButton
-                        onClick={handleCheckIn(id)}
-                        loading={createCheckInMutation.isLoading}
-                        disabled={
-                          positions.isRefetching ||
-                          createCheckInMutation.isLoading
-                        }
-                        text="Check-in"
-                      />
-                    )}
-                    {isObserved ? (
-                      <SportPlaceButton
-                        onClick={handleUnObserve(id)}
-                        text="Unobserve"
-                        className="btn-error"
-                        loading={
-                          deleteObservationMutation.isLoading
-                        }
-                        disabled={
-                          positions.isRefetching ||
-                          deleteObservationMutation.isLoading
-                        }
-                      />
-                    ) : (
-                      <SportPlaceButton
-                        onClick={handleObserve(id)}
-                        text="Observe"
-                        loading={
-                          createObservationMutation.isLoading
-                        }
-                        disabled={
-                          positions.isRefetching ||
-                          createObservationMutation.isLoading
-                        }
-                      />
-                    )}
-                  </div>
-                )}
-              </div>
-            </Popup>
-          </Marker>
-        );
-      })}
-    </MapContainer>
+                    </div>
+                  )}
+                </div>
+              </Popup>
+            </Marker>
+          );
+        })}
+      </MapContainer>
+    </>
   ) : (
     <LoadingSpinner />
   );

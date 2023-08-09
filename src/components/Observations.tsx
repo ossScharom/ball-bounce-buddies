@@ -1,14 +1,18 @@
-import React from 'react'
+import React from "react";
 import { api } from "~/utils/api";
 import LoadingSpinner from "./LoadingSpinner";
 import { Table } from "react-daisyui";
 
-type Props = {selectedSport: string}
+type Props = {
+  selectedSport: string;
+  setSportPlaceId: (sportPlaceId: string) => void;
+  setModalOpen: (showChat: boolean) => void;
+};
 
-export default function Observations({selectedSport}: Props) {
+export default function Observations({ selectedSport }: Props) {
   const getObservationsQuery = api.observation.getObservations.useQuery({
-    selectedSport
-  })
+    selectedSport,
+  });
   return getObservationsQuery.data ? (
     <Table zebra>
       <Table.Head>

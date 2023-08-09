@@ -1,11 +1,12 @@
-import { signIn, signOut, useSession } from "next-auth/react";
-import { api } from "~/utils/api";
+import { useSession } from "next-auth/react";
 import MainLayout from "./layout/MainLayout";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import CheckInHistory from "~/components/CheckInHistory";
 import Observations from "~/components/Observations";
+import Chat from "~/components/Chat";
+import classNames from "classnames";
 
 export const LazyMap = dynamic(import("../components/Map"), {
   ssr: false,
@@ -14,28 +15,60 @@ export const LazyMap = dynamic(import("../components/Map"), {
   ),
 });
 
-export enum Page{
+export enum Page {
   MAP,
   OBSERVATIONS,
-  CHECK_IN_HISTORY
+  CHECK_IN_HISTORY,
 }
 
 export default function Home() {
-  const { data: session } = useSession();
   const router = useRouter();
   const [selectedSport, setSelectedSport] = useState("TABLE_TENNIS");
   const [selectedPage, setSelectedPage] = useState(Page.MAP);
 
-  let pageToRender
-  switch(selectedPage){
+  const [sportPlaceId, setSportPlaceId] = useState<string>();
+  const [showChat, setShowChat] = useState(false);
+
+  const wrapperSetSportPlaceId = useCallback(
+    (sportPlaceId: string) => {
+      setSportPlaceId(sportPlaceId);
+    },
+    [setSportPlaceId]
+  );
+
+  console.log(showChat)
+  const wrapperToggleChatOpen = useCallback((showChat: boolean) => {
+    setShowChat(showChat);
+  }, [setShowChat]);
+
+  let pageToRender;
+  switch (selectedPage) {
     case Page.MAP:
-      pageToRender = <LazyMap selectedSport={selectedSport} />
+      pageToRender = (
+        <LazyMap
+          selectedSport={selectedSport}
+          setSportPlaceId={wrapperSetSportPlaceId}
+          setModalOpen={wrapperToggleChatOpen}
+        />
+      );
       break;
     case Page.OBSERVATIONS:
-      pageToRender = <Observations selectedSport={selectedSport}/>
-      break
+      pageToRender = (
+        <Observations
+          selectedSport={selectedSport}
+          setSportPlaceId={wrapperSetSportPlaceId}
+          setModalOpen={wrapperToggleChatOpen}
+        />
+      );
+      break;
     case Page.CHECK_IN_HISTORY:
-      pageToRender = <CheckInHistory selectedSport={selectedSport}/>
+      pageToRender = (
+        <CheckInHistory
+          selectedSport={selectedSport}
+          setSportPlaceId={wrapperSetSportPlaceId}
+          setModalOpen={wrapperToggleChatOpen}
+        />
+      );
       break;
   }
   return (
@@ -45,7 +78,22 @@ export default function Home() {
       selectedPage={selectedPage}
       setSelectedPage={setSelectedPage}
     >
-      {pageToRender}
+      <div className="flex h-full w-full justify-around ">
+        <div
+          className={classNames("h-full transition-all", {
+            "w-2/3": showChat,
+            "w-full": !showChat,
+          })}
+        >
+          {pageToRender}
+        </div>
+        {showChat && (
+          <Chat
+            sportPlaceId={sportPlaceId}
+            handleCloseChat={wrapperToggleChatOpen}
+          />
+        )}
+      </div>
     </MainLayout>
   );
 }

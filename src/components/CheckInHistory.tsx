@@ -3,7 +3,11 @@ import { api } from "~/utils/api";
 import LoadingSpinner from "./LoadingSpinner";
 import { Table } from "react-daisyui";
 
-type Props = { selectedSport: string };
+type Props = {
+  selectedSport: string;
+  setSportPlaceId: (sportPlaceId: string) => void;
+  setModalOpen: (showChat: boolean) => void;
+};
 
 export default function CheckInHistory({ selectedSport }: Props) {
   const queryCheckInHistory = api.checkIn.checkInHistory.useQuery({

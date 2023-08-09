@@ -1,5 +1,4 @@
 import React, { Dispatch, SetStateAction } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faMapLocationDot,
   faClockRotateLeft,

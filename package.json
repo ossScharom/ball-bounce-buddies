@@ -30,6 +30,7 @@
     "@types/react-fontawesome": "^1.6.5",
     "@types/react-toastify": "^4.1.0",
     "classnames": "^2.3.2",
+    "date-fns": "^2.30.0",
     "fontawesome": "^5.6.3",
     "leaflet": "^1.9.4",
     "leaflet-defaulticon-compatibility": "^0.1.1",
@@ -64,7 +65,7 @@
     "prettier": "^2.8.8",
     "prettier-plugin-tailwindcss": "^0.2.8",
     "prisma": "^4.14.0",
-    "react-daisyui": "^3.1.2",
+    "react-daisyui": "^4.0.4",
     "tailwindcss": "^3.3.0"
   },
   "ct3aMetadata": {
