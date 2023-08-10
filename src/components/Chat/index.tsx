@@ -3,11 +3,14 @@ import { Button, ChatBubble, Input, InputGroup, Modal } from "react-daisyui";
 import { api } from "~/utils/api";
 import LoadingSpinner from "../LoadingSpinner";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { formatDistanceToNow } from "date-fns";
-import { getSession, useSession } from "next-auth/react";
-import classNames from "classnames";
+import { faXmark,
+  faPaperPlane,
+  faRotate
+} from "@fortawesome/free-solid-svg-icons";
+import { useSession } from "next-auth/react";
 import Message from "./Message";
+import classNames from "classnames";
+import { create } from "domain";
 
 type Props = {
   handleCloseChat: (showChat: boolean) => void;
@@ -21,6 +24,7 @@ const ChatModal = ({ sportPlaceId, handleCloseChat }: Props) => {
   });
 
   const [currMessage, setCurrMessage] = useState<string>("");
+  const [refetchingMessages, setRefetchingMessages] = useState(false)
 
   const createMessageMutation = api.message.create.useMutation({
     onSuccess: () => {
@@ -28,16 +32,24 @@ const ChatModal = ({ sportPlaceId, handleCloseChat }: Props) => {
       setCurrMessage("");
     },
   });
+
   const { data: session } = useSession();
 
   const handleCurrMessageUpdate = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCurrMessage(e.currentTarget.value);
   };
+
   const handleSendMessage = () => {
     if (sportPlaceId && currMessage) {
       createMessageMutation.mutate({ sportPlaceId, message: currMessage });
     }
   };
+
+  const handleReload = () => {
+    messages.refetch()
+    setRefetchingMessages(true)
+    setTimeout(() => setRefetchingMessages(false), 200)
+  }
 
   return (
     <div className="flex w-1/3 flex-col justify-between gap-3">
@@ -65,16 +77,19 @@ const ChatModal = ({ sportPlaceId, handleCloseChat }: Props) => {
           <LoadingSpinner />
         )}
       </div>
-      <InputGroup className="grid grid-cols-3 justify-center">
+      <InputGroup className="grid grid-cols-8 justify-center">
+        <Button className="btn-primary col-span-1" onClick={handleReload} disabled={messages.isLoading || messages.isRefetching} >
+          <FontAwesomeIcon className={classNames("text-3xl", {'animate-spin': refetchingMessages})} icon={faRotate} />
+        </Button>
         <Input
-          className="col-span-2"
+          className="col-span-6"
           onChange={handleCurrMessageUpdate}
           placeholder="Type here"
           value={currMessage}
         />
 
-        <Button className="btn-primary" onClick={handleSendMessage}>
-          Send
+        <Button className="btn-primary col-span-1" onClick={handleSendMessage} loading={createMessageMutation.isLoading} disabled={createMessageMutation.isLoading || messages.isLoading || messages.isRefetching}>
+          <FontAwesomeIcon className="text-3xl" icon={faPaperPlane} />
         </Button>
       </InputGroup>
     </div>
