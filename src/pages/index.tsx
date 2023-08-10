@@ -36,7 +36,6 @@ export default function Home() {
     [setSportPlaceId]
   );
 
-  console.log(showChat)
   const wrapperToggleChatOpen = useCallback((showChat: boolean) => {
     setShowChat(showChat);
   }, [setShowChat]);

@@ -74,7 +74,6 @@ export const authOptions: NextAuthOptions = {
   events:{
     async signIn({account, user, isNewUser}){
       if(isNewUser && user.email){
-        console.log('newuser')
         await prisma.user.update({where: {
           id: user.id
         }, data: {image: `https://www.gravatar.com/avatar/${createHash('md5').update(user.email).digest('hex')}`}})

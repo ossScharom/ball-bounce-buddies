@@ -6,6 +6,8 @@ import { Sport } from "@prisma/client";
 
 async function main() {
     // DELETE old state
+    await prisma.observation.deleteMany({})
+    await prisma.message.deleteMany({})
     await prisma.sportPlace.deleteMany({})
 
     // CREATE new state
