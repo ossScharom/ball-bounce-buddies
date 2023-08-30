@@ -28,7 +28,6 @@ export enum Page {
 }
 
 export default function Home() {
-  const router = useRouter();
   const [selectedSport, setSelectedSport] = useState("TABLE_TENNIS");
   const [selectedPage, setSelectedPage] = useState(Page.MAP);
 
