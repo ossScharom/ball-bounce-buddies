@@ -1,4 +1,3 @@
-import { useSession } from "next-auth/react";
 import MainLayout from "./layout/MainLayout";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
@@ -14,11 +13,18 @@ export const LazyMap = dynamic(import("../components/Map"), {
     <div style={{ textAlign: "center", paddingTop: 20 }}>Loading…</div>
   ),
 });
+export const LazyAddSportPlaceMap = dynamic(import("../components/AddSportPlaceMap"), {
+  ssr: false,
+  loading: () => (
+    <div style={{ textAlign: "center", paddingTop: 20 }}>Loading…</div>
+  ),
+});
 
 export enum Page {
   MAP,
   OBSERVATIONS,
   CHECK_IN_HISTORY,
+  ADD_SPORT_PLACE
 }
 
 export default function Home() {
@@ -50,6 +56,13 @@ export default function Home() {
           setModalOpen={wrapperToggleChatOpen}
         />
       );
+      break;
+    case Page.ADD_SPORT_PLACE:
+      pageToRender = <LazyAddSportPlaceMap 
+          selectedSport={selectedSport}
+          setSportPlaceId={wrapperSetSportPlaceId}
+          setModalOpen={wrapperToggleChatOpen}
+      />
       break;
     case Page.OBSERVATIONS:
       pageToRender = (

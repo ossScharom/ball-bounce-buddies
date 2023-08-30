@@ -3,6 +3,7 @@ import {
   faMapLocationDot,
   faClockRotateLeft,
   faBinoculars,
+  faSquarePlus,
 } from "@fortawesome/free-solid-svg-icons";
 import BottomNavButton from "./BottomNavButton";
 import { Page } from "~/pages";
@@ -18,6 +19,11 @@ export default function BottomNav({ setSelectedPage, selectedPage }: Props) {
         iconDef={faMapLocationDot}
         active={selectedPage === Page.MAP}
         onClick={()=>setSelectedPage(Page.MAP)}
+      />
+      <BottomNavButton
+        iconDef={faSquarePlus}
+        active={selectedPage === Page.ADD_SPORT_PLACE}
+        onClick={()=>setSelectedPage(Page.ADD_SPORT_PLACE)}
       />
       <BottomNavButton
         iconDef={faBinoculars}

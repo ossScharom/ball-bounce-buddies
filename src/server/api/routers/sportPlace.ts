@@ -1,6 +1,10 @@
 import { z } from "zod";
 import { Sport } from "@prisma/client";
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 
 export const sportPlaceRouter = createTRPCRouter({
   getAllSportPlacesOf: publicProcedure
@@ -30,5 +34,20 @@ export const sportPlaceRouter = createTRPCRouter({
         isObserved: observations.length > 0,
         ...rest,
       }));
+    }),
+  createSportPlace: protectedProcedure
+    .input(z.object({ lat: z.number(), lon: z.number(), type: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id
+      await ctx.prisma.sportPlace.create({
+        data:{
+          lat: input.lat,
+          lon: input.lon,
+          type: input.type as Sport,
+          userId
+        }
+      })
+      // call to OSM
+
     }),
 });
